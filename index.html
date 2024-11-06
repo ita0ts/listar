@@ -1,160 +1,64 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Álbuns de 2024</title>
+    <title>Carregar Álbuns do Mês</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+        #loading-bar-container {
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+        }
+        #loading-bar {
+            height: 20px;
+            background-color: #4caf50;
+        }
+        #loading-message {
+            text-align: center;
         }
         .album-list {
             list-style-type: none;
-            padding: 0;
         }
         .album-item {
-            margin-bottom: 10px;
-        }
-        .album-item strong {
-            font-size: 1.2em;
-        }
-        /* Estilo para a barra de loading */
-        .loading-bar-container {
-            width: 100%;
-            background-color: #f3f3f3;
-            border-radius: 10px;
-            margin-top: 20px;
-            height: 20px;
-            display: none;
-        }
-        .loading-bar {
-            width: 0;
-            height: 100%;
-            background-color: #4caf50;
-            border-radius: 10px;
-        }
-        #loading-message {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        /* Estilo para o botão */
-        #load-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #load-button:hover {
-            background-color: #45a049;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>Top Álbuns de 2024</h1>
-    
-    <!-- Botão para carregar os álbuns -->
-    <button id="load-button" onclick="loadTopAlbumsForYear()">Carregar Álbuns</button>
+    <h1>Escolha um mês para carregar os álbuns:</h1>
 
+    <!-- Menu de seleção de mês -->
+    <select id="month-select">
+        <option value="">Selecione um mês</option>
+        <option value="01">Janeiro</option>
+        <option value="02">Fevereiro</option>
+        <option value="03">Março</option>
+        <option value="04">Abril</option>
+        <option value="05">Maio</option>
+        <option value="06">Junho</option>
+        <option value="07">Julho</option>
+        <option value="08">Agosto</option>
+        <option value="09">Setembro</option>
+        <option value="10">Outubro</option>
+        <option value="11">Novembro</option>
+        <option value="12">Dezembro</option>
+    </select>
+
+    <!-- Botão para carregar os álbuns -->
+    <button id="load-button" onclick="loadAlbumsByMonth()">Carregar Álbuns</button>
+
+    <!-- Barra de progresso de carregamento -->
+    <div id="loading-bar-container">
+        <div id="loading-bar"></div>
+        <p id="loading-message">Carregando...</p>
+    </div>
+
+    <!-- Área onde os álbuns serão exibidos -->
     <div id="albums"></div>
 
-    <!-- Barra de loading -->
-    <div class="loading-bar-container" id="loading-bar-container">
-        <div class="loading-bar" id="loading-bar"></div>
-    </div>
-    <div id="loading-message"></div>
-
-    <script>
-        // Função para formatar a data em timestamp para a API
-        function getTimestamp(dateStr) {
-            return Math.floor(new Date(dateStr).getTime() / 1000);
-        }
-
-        // Função para gerar a URL da API com os intervalos de data
-        function fetchAlbums(from, to, monthIndex, totalMonths) {
-            const apiKey = 'e97ca135be347c4a86d57a2fe313f59e';
-            const user = 'cefas1931';
-            const url = `https://ws.audioscrobbler.com/2.0/?method=user.getweeklyalbumchart&user=${user}&api_key=${apiKey}&from=${from}&to=${to}&format=json`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    displayAlbums(data.weeklyalbumchart.album);
-                    updateLoadingProgress(monthIndex, totalMonths);
-                })
-                .catch(error => console.error('Erro ao buscar álbuns:', error));
-        }
-
-        // Função para exibir os álbuns na página
-        function displayAlbums(albums) {
-            const albumsContainer = document.getElementById('albums');
-            const albumList = document.createElement('ul');
-            albumList.className = 'album-list';
-
-            albums.slice(0, 50).forEach(album => {
-                const albumItem = document.createElement('li');
-                albumItem.className = 'album-item';
-                albumItem.innerHTML = `
-                     <h1>${album.playcount}</h1> - <strong>${album[0].artist}</strong> - <h1>${album.name}</h1>
-                `;
-                albumList.appendChild(albumItem);
-            });
-
-            albumsContainer.appendChild(albumList);
-        }
-
-        // Função para atualizar a barra de progresso de loading
-        function updateLoadingProgress(monthIndex, totalMonths) {
-            const loadingBar = document.getElementById('loading-bar');
-            const loadingMessage = document.getElementById('loading-message');
-            const progress = ((monthIndex + 1) / totalMonths) * 100;
-
-            loadingBar.style.width = `${progress}%`;
-            loadingMessage.textContent = `Carregando... ${Math.round(progress)}%`;
-
-            if (progress === 100) {
-                loadingMessage.textContent = 'Carregamento concluído!';
-            }
-        }
-
-        // Função para carregar os álbuns para cada mês de 2024
-        function loadTopAlbumsForYear() {
-            const loadButton = document.getElementById('load-button');
-            loadButton.disabled = true; // Desabilita o botão enquanto carrega
-
-            const months = [
-                { month: '01', name: 'Janeiro' },
-                { month: '02', name: 'Fevereiro' },
-                { month: '03', name: 'Março' },
-                { month: '04', name: 'Abril' },
-                { month: '05', name: 'Maio' },
-                { month: '06', name: 'Junho' },
-                { month: '07', name: 'Julho' },
-                { month: '08', name: 'Agosto' },
-                { month: '09', name: 'Setembro' },
-                { month: '10', name: 'Outubro' },
-                { month: '11', name: 'Novembro' },
-                { month: '12', name: 'Dezembro' }
-            ];
-
-            const totalMonths = months.length;
-
-            // Exibe a barra de progresso
-            document.getElementById('loading-bar-container').style.display = 'block';
-
-            months.forEach((month, index) => {
-                const fromDate = `2024-${month.month}-01`;
-                const toDate = `2024-${month.month}-31`;
-
-                const fromTimestamp = getTimestamp(fromDate);
-                const toTimestamp = getTimestamp(toDate);
-
-                fetchAlbums(fromTimestamp, toTimestamp, index, totalMonths);
-            });
-        }
-    </script>
+    <script src="main.js"></script>
 </body>
 </html>

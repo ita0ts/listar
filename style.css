@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+.album-list {
+    padding: 0;
+}
+.album-item {
+    display: flex; 
+    margin-bottom: 10px;
+}
+.album-item strong {
+    font-size: 1.2em;
+}
+/* Estilo para a barra de loading */
+.loading-bar-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    margin-top: 20px;
+    height: 20px;
+    display: none;
+}
+.loading-bar {
+    width: 0;
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 10px;
+}
+#loading-message {
+    margin-top: 10px;
+    font-weight: bold;
+}
+/* Estilo para o botão */
+#load-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+#load-button:hover {
+    background-color: #45a049;
+}
