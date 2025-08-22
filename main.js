@@ -18,11 +18,14 @@ function fetchAlbums(from, to, monthIndex, totalMonths, monthName) {
         .catch(error => console.error('Erro ao buscar álbuns:', error));
 }
 
+
 // Função para carregar os álbuns para o mês selecionado
 function loadAlbumsByMonth() {
     const loadButton = document.getElementById('load-button');
     const monthSelect = document.getElementById('month-select');
     const selectedMonth = monthSelect.value;
+    const yearSelect = document.getElementById('year-text');
+    const selectedYear = yearSelect.value; 
 
     if (!selectedMonth) {
         alert('Por favor, selecione um mês!');
@@ -55,8 +58,8 @@ function loadAlbumsByMonth() {
         return;
     }
 
-    const fromDate = `2024-${selectedMonthObj.month}-01`;
-    const toDate = `2024-${selectedMonthObj.month}-31`;
+    const fromDate = `${selectedYear}-${selectedMonthObj.month}-01`;
+    const toDate = `${selectedYear}-${selectedMonthObj.month}-31`;
 
     const fromTimestamp = getTimestamp(fromDate);
     const toTimestamp = getTimestamp(toDate);
